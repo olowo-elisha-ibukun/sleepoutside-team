@@ -9,6 +9,12 @@ export default class ProductDetails {
 
   async init() {
     this.product = await this.dataSource.findProductById(this.productId);
+
+    if (!this.product) {
+      this.renderNotFound();
+      return;
+    }
+
     this.renderProductDetails();
     document
       .getElementById('addToCart')
@@ -26,6 +32,17 @@ export default class ProductDetails {
         <p class="product-color">Color: ${this.product.Colors[0].ColorName}</p>
         <p class="product-description">${this.product.DescriptionHtmlSimple}</p>
         <button id="addToCart">Add to Cart</button>
+      </div>
+    `;
+  }
+
+  renderNotFound() {
+    const main = document.querySelector('main');
+    main.innerHTML = `
+      <div class="product-detail">
+        <h1>Product not found</h1>
+        <p>We couldn’t load that product. Please go back to the home page and try again.</p>
+        <a href="../index.html">Back to home</a>
       </div>
     `;
   }
