@@ -23,6 +23,8 @@ export default class ProductDetails {
 
   renderProductDetails() {
     const main = document.querySelector('main');
+    const description = this.product.DescriptionHtmlSimple.replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
+
     main.innerHTML = `
       <div class="product-detail">
         <h2>${this.product.Brand.Name}</h2>
@@ -30,7 +32,7 @@ export default class ProductDetails {
         <img class="divider" src="${this.product.Image}" alt="Image of ${this.product.Name}" />
         <p class="product-card__price">$${this.product.FinalPrice}</p>
         <p class="product-color">Color: ${this.product.Colors[0].ColorName}</p>
-        <p class="product-description">${this.product.DescriptionHtmlSimple}</p>
+        <p class="product-description">${description}</p>
         <button id="addToCart">Add to Cart</button>
       </div>
     `;
