@@ -110,6 +110,12 @@ button {
   cursor: pointer;
 }
 
+.product-detail button {
+  width: min(100%, 320px);
+  max-width: 100%;
+  padding: 0.75em 1.25em;
+}
+
 .divider {
   border-bottom: 2px solid var(--primary-color);
 }
