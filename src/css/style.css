@@ -69,6 +69,7 @@ p {
   left: calc(50% - 60px);
   bottom: -15px;
   background-color: white;
+  padding: 0.5rem;
 }
 
 .logo--square {
