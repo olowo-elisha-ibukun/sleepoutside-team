@@ -26,3 +26,29 @@ export function getParam(param) {
   const searchParams = new URLSearchParams(window.location.search);
   return searchParams.get(param);
 }
+// load an HTML template from the partials folder
+export async function loadTemplate(path) {
+  const response = await fetch(path);
+  if (!response.ok) {
+    throw new Error(`Failed to load template: ${path}`);
+  }
+  return await response.text();
+}
+// render a template into a parent element
+export function renderWithTemplate(template, parentElement, data, callback) {
+  parentElement.innerHTML = template;
+  if (callback && typeof callback === "function") {
+    callback(data);
+  }
+}
+// load header and footer templates and inject them into the page
+export async function loadHeaderFooter() {
+  const headerUrl = new URL('../public/partials/header.html', import.meta.url).href;
+  const footerUrl = new URL('../public/partials/footer.html', import.meta.url).href;
+  const headerTemplate = await loadTemplate(headerUrl);
+  const footerTemplate = await loadTemplate(footerUrl);
+  const headerEl = qs('#main-header');
+  const footerEl = qs('#main-footer');
+  if (headerEl) renderWithTemplate(headerTemplate, headerEl);
+  if (footerEl) renderWithTemplate(footerTemplate, footerEl);
+}
