@@ -34,6 +34,13 @@ export async function loadTemplate(path) {
   }
   return await response.text();
 }
+
+// Resolve a partial template path relative to this module file.
+// This prevents deep nested pages from breaking when they try to fetch shared partials.
+function resolvePartialPath(filename) {
+  return new URL(`../public/partials/${filename}`, import.meta.url).href;
+}
+
 // render a template into a parent element
 export function renderWithTemplate(template, parentElement, data, callback) {
   parentElement.innerHTML = template;
@@ -41,12 +48,13 @@ export function renderWithTemplate(template, parentElement, data, callback) {
     callback(data);
   }
 }
+
 // load header and footer templates and inject them into the page
 export async function loadHeaderFooter() {
-  const headerUrl = new URL('../public/partials/header.html', import.meta.url).href;
-  const footerUrl = new URL('../public/partials/footer.html', import.meta.url).href;
-  const headerTemplate = await loadTemplate(headerUrl);
-  const footerTemplate = await loadTemplate(footerUrl);
+  const headerUrl = resolvePartialPath('header.html');
+  const footerUrl = resolvePartialPath('footer.html');
+  const headerTemplate = await loadTemplate(headerUrl).catch(() => loadTemplate('/partials/header.html'));
+  const footerTemplate = await loadTemplate(footerUrl).catch(() => loadTemplate('/partials/footer.html'));
   const headerEl = qs('#main-header');
   const footerEl = qs('#main-footer');
   if (headerEl) renderWithTemplate(headerTemplate, headerEl);
