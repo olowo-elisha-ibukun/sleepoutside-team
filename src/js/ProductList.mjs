@@ -23,13 +23,18 @@ export default class ProductList {
 
     // Render product items
     const productHTML = this.products.map((product) => {
+      const imageSrc = product.Images?.PrimaryMedium ?? product.Image ?? '';
+      const brandName = product.Brand?.Name ?? '';
+      const productName = product.Name ?? product.NameWithoutBrand ?? '';
+      const productPrice = product.FinalPrice ?? product.ListPrice ?? 0;
+
       return `
         <li class="product-card">
           <a href="../product_pages/index.html?product=${product.Id}">
-            <img src="${product.Images.PrimaryMedium}" alt="${product.Name}" />
-            <h3 class="card__brand">${product.Brand.Name}</h3>
-            <h2 class="card__name">${product.Name}</h2>
-            <p class="product-card__price">$${product.FinalPrice}</p>
+            <img src="${imageSrc}" alt="${productName}" />
+            <h3 class="card__brand">${brandName}</h3>
+            <h2 class="card__name">${productName}</h2>
+            <p class="product-card__price">$${productPrice}</p>
           </a>
         </li>
       `;
