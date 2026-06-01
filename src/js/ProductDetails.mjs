@@ -23,15 +23,20 @@ export default class ProductDetails {
 
   renderProductDetails() {
     const main = document.querySelector('main');
-    const description = this.product.DescriptionHtmlSimple.replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
+    const description = (this.product.DescriptionHtmlSimple ?? '').replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
+    const imageUrl = this.product.Images?.PrimaryLarge ?? this.product.Image ?? '';
+    const brandName = this.product.Brand?.Name ?? '';
+    const productName = this.product.Name ?? this.product.NameWithoutBrand ?? '';
+    const colorName = this.product.Colors?.[0]?.ColorName ?? 'N/A';
+    const productPrice = this.product.FinalPrice ?? this.product.ListPrice ?? 0;
 
     main.innerHTML = `
       <div class="product-detail">
-        <h2>${this.product.Brand.Name}</h2>
-        <h1>${this.product.Name}</h1>
-        <img class="divider" src="${this.product.Images.PrimaryLarge}" alt="${this.product.Name}" />
-        <p class="product-card__price">$${this.product.FinalPrice}</p>
-        <p class="product-color">Color: ${this.product.Colors[0].ColorName}</p>
+        <h2>${brandName}</h2>
+        <h1>${productName}</h1>
+        <img class="divider" src="${imageUrl}" alt="${productName}" />
+        <p class="product-card__price">$${productPrice}</p>
+        <p class="product-color">Color: ${colorName}</p>
         <p class="product-description">${description}</p>
         <button id="addToCart">Add to Cart</button>
       </div>
@@ -50,6 +55,10 @@ export default class ProductDetails {
   }
 
   addToCart() {
-    setLocalStorage('so-cart', this.product);
+    const existingCart = JSON.parse(localStorage.getItem('so-cart'));
+    const cartItems = Array.isArray(existingCart) ? existingCart : [];
+    cartItems.push(this.product);
+    localStorage.setItem('so-cart', JSON.stringify(cartItems));
+    window.location.href = '../cart/index.html';
   }
 }
